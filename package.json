@@ -1,0 +1,27 @@
+{
+  "name": "code-problem-service",
+  "version": "1.0.0",
+  "description": "This is an admin service to manage problems of code platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx nodemon src/index.js"
+  },
+  "author": "Amit patwa",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/cosmos": "^4.9.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "http-status-codes": "^2.3.0",
+    "marked": "^17.0.4",
+    "mongo": "^0.1.0",
+    "mongoose": "^9.2.3",
+    "nodemon": "^3.1.14",
+    "sanitize-html": "^2.17.1",
+    "turndown": "^7.2.2",
+    "winston": "^3.19.0",
+    "winston-mongodb": "^7.0.1"
+  }
+}
