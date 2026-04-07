@@ -649,6 +649,14 @@ a:hover {
 }
 
 /* ============ Forms ============ */
+/* Webkit autofill fix for dark theme */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: var(--text-primary) !important;
+}
 .form-grid {
   display: grid;
   gap: 24px;
@@ -831,6 +839,10 @@ a:hover {
   gap: 24px;
 }
 
+.detail-grid > * {
+  min-width: 0;
+}
+
 .detail-meta {
   display: flex;
   flex-direction: column;
@@ -921,6 +933,14 @@ a:hover {
 .markdown-content strong {
   color: var(--text-heading);
   font-weight: 600;
+}
+
+.markdown-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  display: block;
+  margin: 14px 0;
 }
 
 /* ============ Modal ============ */

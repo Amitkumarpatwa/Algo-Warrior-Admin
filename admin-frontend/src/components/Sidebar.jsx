@@ -29,6 +29,7 @@ function Sidebar({ isOpen, onClose }) {
 
           <NavLink
             to="/problems"
+            end
             className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
             onClick={onClose}
           >

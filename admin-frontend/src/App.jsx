@@ -24,12 +24,19 @@ function PublicRoute({ children }) {
   return children;
 }
 
+function RootRoute() {
+  const { user, loading } = useAuth();
+  if (loading) return <Loader />;
+  if (user) return <Navigate to="/dashboard" replace />;
+  return <Navigate to="/login" replace />;
+}
+
 function AppRoutes() {
   return (
     <Routes>
+      <Route path="/" element={<RootRoute />} />
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/problems" element={<ProblemsList />} />
         <Route path="/problems/new" element={<ProblemForm />} />

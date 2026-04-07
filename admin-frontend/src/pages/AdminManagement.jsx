@@ -120,7 +120,7 @@ function AdminManagement() {
                 <span className="admin-role-badge">
                   <HiOutlineShieldCheck /> Admin
                 </span>
-                {admin.email !== 'admin@codeadmin.com' && (
+                {admin.email !== (process.env.ADMIN_EMAIL || 'admin@example.com').toLowerCase() && (
                   <button
                     className="action-btn danger"
                     title="Remove admin"
