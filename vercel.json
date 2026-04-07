@@ -23,6 +23,10 @@
       "dest": "/api/index.js"
     },
     {
+      "src": "/assets/(.*)",
+      "dest": "/admin-frontend/assets/$1"
+    },
+    {
       "handle": "filesystem"
     },
     {
