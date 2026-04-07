@@ -16,15 +16,15 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "src/index.js"
+      "dest": "/src/index.js"
     },
     {
       "src": "/assets/(.*)",
-      "dest": "admin-frontend/dist/assets/$1"
+      "dest": "/admin-frontend/assets/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "admin-frontend/dist/index.html"
+      "dest": "/admin-frontend/index.html"
     }
   ]
 }
