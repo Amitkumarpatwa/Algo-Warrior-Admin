@@ -47,11 +47,14 @@ allowedTransports.push(
   }),
 );
 
-allowedTransports.push(
-  new winston.transports.File({
-    filename: "app.log",
-  }),
-);
+// Vercel has a read-only filesystem, so we cannot write to 'app.log' in production
+if (process.env.NODE_ENV !== 'production') {
+  allowedTransports.push(
+    new winston.transports.File({
+      filename: "app.log",
+    }),
+  );
+}
 
 const logger = winston.createLogger({
   // default formatting
