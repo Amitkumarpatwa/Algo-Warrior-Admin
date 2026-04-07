@@ -1,30 +1,40 @@
-const { CosmosClient }=require('@azure/cosmos');
+const { CosmosClient } = require('@azure/cosmos');
 const { ENDPOINT, KEY } = require('../config/server.config.js');
 
-//connecting your code ti cosmos db
-const endpoint=ENDPOINT;
-const key=KEY;
-const databaseId="logging-store";
-const containerId="error-logs";
+const databaseId = "logging-store";
+const containerId = "error-logs";
 
-const client= new CosmosClient({endpoint,key});
-const database=client.database(databaseId);
-const container=database.container(containerId);
+let container = null;
 
-async function logToCosmosDB(level,message) {
+function getContainer() {
+  if (!container && ENDPOINT && KEY) {
     try {
-        // structure of the document we will store in cosmos db
-        await container.items.create({
-            timeStamp:new Date().toISOString(),
-            level:level,
-            message:message
-        });
-        console.log("Log entry created in cosmos Db");
-        
+      const client = new CosmosClient({ endpoint: ENDPOINT, key: KEY });
+      const database = client.database(databaseId);
+      container = database.container(containerId);
     } catch (error) {
-        console.log("Error logging to cosmos db");
-        
+      console.log("CosmosDB client initialization failed:", error.message);
     }
-    
+  }
+  return container;
 }
+
+async function logToCosmosDB(level, message) {
+  try {
+    const c = getContainer();
+    if (!c) {
+      console.log("CosmosDB not available, skipping log");
+      return;
+    }
+    await c.items.create({
+      timeStamp: new Date().toISOString(),
+      level: level,
+      message: message,
+    });
+    console.log("Log entry created in cosmos Db");
+  } catch (error) {
+    console.log("Error logging to cosmos db");
+  }
+}
+
 module.exports = logToCosmosDB;
