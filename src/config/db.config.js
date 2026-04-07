@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { NODE_ENV, ATLAS_DB_URL } = require("./server.config.js");
+const logger = require("./logger.config.js");
 
 async function connectToDB() {
   try {
@@ -8,8 +9,8 @@ async function connectToDB() {
       console.log("MongoDB connected successfully");
     }
   } catch (error) {
-    console.log("Unable to connect to the DB server");
-    console.log(error);
+    logger.error("Unable to connect to the DB server");
+    logger.error(error.message);
     throw error; // Re-throw so caller knows connection failed
   }
 }

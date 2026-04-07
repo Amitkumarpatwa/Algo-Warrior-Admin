@@ -1,3 +1,4 @@
+require("dotenv").config();
 const dns = require("dns");
 dns.setDefaultResultOrder("ipv4first");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
@@ -10,7 +11,8 @@ const { PORT } = require("./config/server.config");
 const apiRouter = require("./routes/index");
 const errorHandler = require("./utils/errorHandler");
 const connectToDB = require("./config/db.config.js");
-
+const seedAdmin = require("./utils/seedAdmin");
+const logger = require("./config/logger.config.js");
 
 const app = express();
 
@@ -28,12 +30,22 @@ app.get("/ping", (req, res) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, async () => {
-  console.log(`Server started at PORT: ${PORT}`);
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, async () => {
+    console.log(`Server started at PORT: ${PORT}`);
 
-  try {
-    await connectToDB();
-  } catch (error) {
-    console.log("Failed to connect to database");
-  }
-});
+    try {
+      await connectToDB();
+      await seedAdmin(); // Seed initial admin credentials
+    } catch (error) {
+      logger.error("Failed to connect to database");
+    }
+  });
+} else {
+  // For Vercel Serverless Function execution
+  connectToDB()
+    .then(() => seedAdmin())
+    .catch((error) => logger.error("Failed to connect to DB in serverless mode"));
+}
+
+module.exports = app;
