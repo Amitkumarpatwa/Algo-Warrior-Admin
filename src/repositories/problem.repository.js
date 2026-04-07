@@ -1,6 +1,7 @@
 // const Problem=require('../models');
 
 const { Problem } = require("../models/index.js");
+const logger = require("../config/logger.config.js");
 
 class ProblemRepository {
   async createProblem(problemData) {
@@ -12,7 +13,7 @@ class ProblemRepository {
       });
       return problem;
     } catch (error) {
-      console.log(error);
+      logger.error(`Error in createProblem: ${error.message}`);
       throw error;
     }
   }
@@ -22,7 +23,7 @@ class ProblemRepository {
       const problems = await Problem.find({});
       return problems;
     } catch (error) {
-      console.log(error);
+      logger.error(`Error in getAllProblems: ${error.message}`);
       throw error;
     }
   }
@@ -43,7 +44,7 @@ class ProblemRepository {
       const problem = await Problem.findByIdAndDelete(id);
       return problem;
     } catch (error) {
-      console.log(error);
+      logger.error(`Error in deleteProblem for ID ${id}: ${error.message}`);
       throw error;
     }
   }
@@ -56,7 +57,7 @@ class ProblemRepository {
       });
       return problem;
     } catch (error) {
-      console.log(error);
+      logger.error(`Error in updateProblem for ID ${id}: ${error.message}`);
       throw error;
     }
   }

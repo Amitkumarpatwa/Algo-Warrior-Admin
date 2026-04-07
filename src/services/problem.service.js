@@ -39,7 +39,7 @@ class ProblemService {
       
       if (error.name === "CastError") {
         logger.error(`Invalid problem id format ${problemId} in the database`);
-        console.log(error);
+        logger.error(error.message);
         throw new NotFound("Problem", problemId);
       }
 
