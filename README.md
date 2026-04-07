@@ -1,84 +1,99 @@
-# Code Problem Service (Backend)
+# Algo Warrior Admin
 
-The **Code Problem Service** is a robust Node.js and Express backend API designed to power a coding platform. It provides RESTful APIs for creating and managing coding problems, while also handling secure, token-based authentication for administrative personnel.
+A full-stack admin panel I built to manage coding problems for a competitive programming platform. The backend handles CRUD operations for problems and admin authentication, while the frontend gives a clean dashboard to manage everything.
 
-## 🚀 Features
-- **Problem Management API**: Full CRUD capabilities for coding problems (title, description in Markdown, test cases, difficulty, and more).
-- **Authentication System**: Secures admin endpoints using JWT (JSON Web Tokens) and bcrypt for password hashing.
-- **Secure Default Seeding**: Instantly provisions a default, undeletable super-admin account upon system start to prevent lock-outs.
-- **Advanced Logging Engine**: Integrates with [Winston](https://github.com/winstonjs/winston) to systematically transport application logs safely into a separate MongoDB logging database.
-- **Dual-Database Support**: Integrates intelligently with MongoDB (via Mongoose) and Azure Cosmos SQL.
+**Live Demo:** [https://algo-warrior-admin.vercel.app](https://algo-warrior-admin.vercel.app)
 
-## 📁 System Architecture & Folder Structure
+> Demo login — email: `test@test.com` / password: `test123`
 
-```text
-code-problem-service/
-├── src/
-│   ├── clientApis/       # External service adapters/clients
-│   ├── config/           # Environment & database configurations
-│   ├── controller/       # Express route handlers processing incoming HTTP requests
-│   ├── errors/           # Custom error classes and global error handling
-│   ├── models/           # Mongoose Data Schemas (Admin, Problem, etc.)
-│   ├── repositories/     # Data Access Layer separating DB logic from business logic
-│   ├── routes/           # API Route Definitions (v1)
-│   ├── services/         # Core business logic
-│   ├── utils/            # Shared helper functions (Auth tokens, Default Seeds)
-│   ├── validators/       # Request payload validation logic
-│   └── index.js          # Application entry point
-├── package.json
-└── README.md
+## What it does
+
+- Create, edit, and delete coding problems with markdown descriptions and test cases
+- JWT-based auth system with admin management (add/remove admins)
+- Seeds a default admin on first run so you don't get locked out
+- Logs errors to MongoDB and Azure Cosmos DB for monitoring
+
+## Tech Stack
+
+**Backend:** Node.js, Express, MongoDB (Mongoose), Azure Cosmos DB, JWT, bcrypt, Winston  
+**Frontend:** React 19, Vite, React Router v7, React Markdown  
+**Deployment:** Vercel (serverless functions + static build)
+
+## Project Structure
+
+```
+├── src/                    # Backend source code
+│   ├── config/             # DB, server, logger configs
+│   ├── controller/         # Route handlers
+│   ├── models/             # Mongoose schemas
+│   ├── repositories/       # Database queries
+│   ├── routes/             # API routing (v1)
+│   ├── services/           # Business logic
+│   ├── utils/              # Helpers (auth, seeding, sanitization)
+│   └── index.js            # Entry point
+├── admin-frontend/         # React frontend (Vite)
+├── api/                    # Vercel serverless entry
+└── vercel.json             # Deployment config
 ```
 
-## 🛠 Prerequisites & Setup
+## Getting Started
 
-1. Make sure you have **Node.js** installed (v18+ recommended).
-2. Install the necessary dependencies:
+**Prerequisites:** Node.js v18+
+
+1. Clone the repo
    ```bash
-   npm install
+   git clone https://github.com/Amitkumarpatwa/Algo-Warrior-Admin.git
+   cd Algo-Warrior-Admin
    ```
-3. Set up the `.env` file at the root of the project:
+
+2. Set up environment variables — create a `.env` in the root:
    ```env
    PORT=3000
    NODE_ENV="development"
-   
-   # Databases
-   ATLAS_DB_URL="mongodb+srv://<user>:<password>@cluster0.oighupd.mongodb.net/?appName=Cluster0"
-   LOGGER_DB_URL="mongodb+srv://<user>:<password>@cluster0.wnovlgj.mongodb.net/"
-   
-   # Cosmos DB Configuration (Optional / If Active)
-   KEY="your_azure_cosmos_primary_key"
-   ENDPOINT="https://your_cosmos_endpoint.documents.azure.com:443/"
-   
-   # Default Super Admin Seed
-   ADMIN_EMAIL=amitpatwa80040@gmail.com
-   ADMIN_PASSWORD=your_secure_password
+   ATLAS_DB_URL="your_mongodb_connection_string"
+   LOGGER_DB_URL="your_logger_db_connection_string"
+   KEY="your_azure_cosmos_key"
+   ENDPOINT="your_cosmos_endpoint"
+   ADMIN_EMAIL=your_email@example.com
+   ADMIN_PASSWORD=your_password
    ADMIN_NAME="Your Name"
    ```
 
-4. **Start the development server:**
+3. Install backend deps and start the server
    ```bash
+   npm install
    npm run dev
    ```
 
-## 🔌 API Endpoints Reference (v1)
+4. In a separate terminal, set up the frontend
+   ```bash
+   cd admin-frontend
+   npm install
+   npm run dev
+   ```
 
-All endpoints fall under the `/api/v1` namespace.
+5. Open [http://localhost:5173](http://localhost:5173) — the frontend proxies API calls to `localhost:3000` automatically.
 
-**Auth Routes (`/api/v1/auth`)**
-* `POST /login` - Authenticates an admin and returns a JWT.
-* `GET /admins` - *(Protected)* Fetches all active admins.
-* `POST /add` - *(Protected)* Provisions a new admin.
-* `DELETE /remove/:email` - *(Protected)* Deletes an admin (Cannot delete self or default admin).
+## API Endpoints
 
-**Problem Routes (`/api/v1/problems`)**
-* `POST /` - *(Protected)* Create a new coding problem.
-* `GET /` - Fetch listing of all problems.
-* `GET /:id` - Fetch a singular problem by its ID.
-* `PUT /:id` - *(Protected)* Update properties of a problem.
-* `DELETE /:id` - *(Protected)* Delete a coding problem entirely.
+All routes are under `/api/v1`.
 
-## 🤝 Contribution Guidelines
-Make sure your branch follows descriptive namings (`feature/problem-xyz`, `bugfix/auth-crash`). Code must follow standard clean architecture parameters (Controller -> Service -> Repository).
+| Method | Route | Description | Auth |
+|--------|-------|-------------|------|
+| POST | `/auth/login` | Login, returns JWT | No |
+| GET | `/auth` | List all admins | Yes |
+| POST | `/auth` | Add a new admin | Yes |
+| DELETE | `/auth/:email` | Remove an admin | Yes |
+| GET | `/problems` | Get all problems | No |
+| GET | `/problems/:id` | Get single problem | No |
+| POST | `/problems` | Create problem | Yes |
+| PATCH | `/problems/:id` | Update problem | Yes |
+| DELETE | `/problems/:id` | Delete problem | Yes |
 
-## 📄 License
+## Deployment
+
+The project is deployed on Vercel as a monorepo — backend runs as serverless functions and the frontend is a static Vite build. Push to `master` triggers auto-deploy.
+
+## License
+
 ISC
