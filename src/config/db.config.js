@@ -4,10 +4,8 @@ const logger = require("./logger.config.js");
 
 async function connectToDB() {
   try {
-    if (NODE_ENV == "development") {
-      await mongoose.connect(ATLAS_DB_URL);
-      console.log("MongoDB connected successfully");
-    }
+    await mongoose.connect(ATLAS_DB_URL);
+    console.log("MongoDB connected successfully");
   } catch (error) {
     logger.error("Unable to connect to the DB server");
     logger.error(error.message);
